@@ -34,7 +34,7 @@
 
 import java.util.*;
 
-public class leadersInArray {
+public class LeadersInArray {
     static void printArrayList(ArrayList<Integer> arr) {
         for (int j : arr) {
             System.out.print(j + " ");
