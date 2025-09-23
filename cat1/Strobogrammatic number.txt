@@ -1,0 +1,3 @@
+if the number is same after rotating 180 degrees it is this type of number. 
+single digit ones are 0,1,8
+two digit numbers are 11,88,69,96   00 is not considered for 2 digit but for more 

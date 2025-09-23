@@ -1,0 +1,34 @@
+if number is prime then euler value phi of that number is n -1
+like phi(5) = 4;
+
+for product of primes such as 15 = 3* 5 => phi(15) = 3-1*5-1 = 8
+
+for product of composite numbers such as 2500 = 2^2 * 5^4 => phi(2500) = 2500* (1-1/2)*(1-1/5)
+
+whenever we find a number that divides, we reduce the original number by reducing it again and again until that factor has been completely exhausted ad then we move to next number 
+
+
+import java.util.*;
+class Main {
+    public static int phi (int n){
+        int res = n;
+        for(int i =2;i*i<=n;i++){
+            if(n < i) break;
+            if(n%i == 0){
+                while(n%i == 0) n/=i;
+                res -= res/i;
+            }
+        }
+        if(n==res) return n-1;
+        if(n > 1){
+            res/=n;
+        }
+        return res;
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc= new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.println(phi(n));
+    }
+}

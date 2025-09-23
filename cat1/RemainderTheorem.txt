@@ -1,0 +1,41 @@
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of equations: ");
+        int n = sc.nextInt();
+
+        int[] a = new int[n]; // Remainders
+        int[] m = new int[n]; // Moduli
+
+        int M = 1; // Product of all moduli
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter a" + (i + 1) + " (remainder): ");
+            a[i] = sc.nextInt();
+            System.out.print("Enter m" + (i + 1) + " (modulus): ");
+            m[i] = sc.nextInt();
+            M *= m[i];
+        }
+
+        int x = 0; // Final result
+        for (int i = 0; i < n; i++) {
+            int Mi = M / m[i];
+            int yi = modInverse(Mi, m[i]);
+            x += a[i] * Mi * yi;
+        }
+
+        x = x % M;
+        System.out.println("The solution x is: " + x);
+    }
+
+    // Function to find modular inverse using brute force
+    static int modInverse(int a, int m) {
+        a = a % m;
+        for (int x = 1; x < m; x++) {
+            if ((a * x) % m == 1)
+                return x;
+        }
+        return 1; // Default fallback
+    }
+}

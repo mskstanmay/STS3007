@@ -1,0 +1,85 @@
+q inverse(flipflop) = 0 by default 
+
+for 7 * 6
+
+7 = 0111
+6 = 0110
+
+m (multiplicand) = 7
+-m value = 1001 (using 2s compliment)
+q (multiplier)= 6
+
+n = 4 as both have 4 bits, we take larger length of both as n
+accumulator = 0000 in n no. of bits
+
+0000 0110 0 -  acc, q, q inv
+
+we check q last bit and q inverse bit = 4 cases 00,11,01,10
+for 00 or 11
+	- arithmetic right shift of acc, q, q inverse
+	when values are shifted it is called 1st cycle count
+0000 0011 0 -  acc, q, q inv
+for 10 
+	- acc = acc - m
+	1001 0011 0 -  acc, q, q inv
+	- arithmetic right shift of acc, q, q inverse
+	when values are shifted it is called 2nd cycle count
+
+1100 1001 1 -  acc, q, q inv
+for 00 or 11
+	- arithmetic right shift of acc, q, q inverse
+	when values are shifted it is called 3rd cycle count
+
+1110 0100 1 -  acc, q, q inv
+for 01 
+	- acc = acc + m
+	0101 0100 1 -  acc, q, q inv
+	- arithmetic right shift of acc, q, q inverse
+	when values are shifted it is called 4nd cycle count
+
+0010 1010 0 -  acc, q, q inv
+
+- Find value of the binary acc, q i.e 0010 1010 so 2+8+32 = 42;	
+
+
+
+
+
+
+for 5 * 3
+
+5 = 0101
+3 = 0011
+
+m (multiplicand) = 5
+-m value = 1011 (using 2s compliment)
+q (multiplier)= 3
+
+n = 4 as both have 4 bits, we take larger length of both as n
+accumulator = 0000 in n no. of bits
+
+0000 0011 0 -  acc, q, q inv
+
+Cycle 1
+Q₀Q‑1 = 10 → ACC = ACC − m
+1011 0011 0 – ACC, Q, Q‑1
+Arithmetic right shift →
+1101 1001 1
+
+Cycle 2
+Q₀Q‑1 = 11 → Shift only
+1110 1100 1 – after shift
+
+Cycle 3
+Q₀Q‑1 = 01 → ACC = ACC + m
+0011 1100 1 – ACC, Q, Q‑1
+Arithmetic right shift →
+0001 1110 0
+
+Cycle 4
+Q₀Q‑1 = 00 → Shift only
+0000 1111 0 – after shift
+
+Final step:
+ACC, Q = 0000 1111
+Binary 00001111 = 15 (decimal) 	

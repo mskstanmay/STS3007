@@ -1,0 +1,2 @@
+Given int value, find binary value and checked whether it is a palindrome. 
+

@@ -1,0 +1,2 @@
+Same time complexity as simple sieve but lesser space complexity than it.
+Incremental sieve = Segmented sieve + start from 3 and exclude even numbers
