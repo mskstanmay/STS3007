@@ -1,4 +1,4 @@
-# sts3007
+# STS3007 - Advanced Competitive Coding 1
 
 > **Note:** The content for **cat1** is currently incomplete. However, the **cat2** portion is complete and contains all relevant files.
 
