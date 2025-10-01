@@ -14,19 +14,19 @@ This repository contains all codes discussed by the faculty in class for the cou
 The `cat2` directory includes implementations for topics such as:
 
 - Block Swap Rotation
-- Euclid's Algorithm
+- Euclid's GCD Algorithm
 - Karatsuba Multiplication
 - Leaders in Array
-- Majority Element
-- Maximum Consecutive 1s
+- Majority Element (Boyer-Moore)
+- Max Consecutive 1s with K flips (Sliding Window)
 - Maximum Equilibrium Sum
 - Maximum Product Subarray
-- Maximum Sum of Hourglass
-- Move Hyphen to the Beginning
+- Max Hourglass Sum in 2D Array
+- Move Hyphens to Beginning
 - Quick Sort
 - Selection Sort
-- Swap Nibbles
-- Weighted Substring
+- Swap Nibbles (bit manipulation)
+- Weighted SubstringS
 
 All files are written in Java, and the initial comments in each file provide clear explanations of their logic and usage.
 
