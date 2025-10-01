@@ -1,0 +1,1037 @@
+------ BlockSwapRotation.java ------ 
+/* This program rotates an array to the left by 'd' positions using the Block Swap Algorithm.
+ *
+ * Block Swap Algorithm:
+ * A space-efficient method that divides the array into two blocks and recursively swaps them
+ * to achieve the desired rotation without using extra memory.
+ *
+ * Sample Input:
+ * Line 1: {n} — size of the array
+ * Line 2: {array elements}
+ * Line 3: {d} — number of positions to rotate
+ *
+ * Sample Output:
+ * Line 1: Rotated array: {result}
+ *
+ * {result} = array rotated left by 'd' positions
+ *
+ * Approach:
+ * 1. Normalize 'd' to ensure it's within bounds (d = d % n)
+ *
+ * 2. Divide the array into two blocks:
+ *    - Block A: first 'd' elements
+ *    - Block B: remaining 'n - d' elements
+ *
+ * 3. Use a recursive strategy:
+ *    - If sizes of A and B are equal, swap them directly
+ *    - If A is smaller, swap A with the last part of B and recurse on the remaining B
+ *    - If B is smaller, swap B with the first part of A and recurse on the remaining A
+ *
+ * 4. Swapping is done in-place using a helper function to avoid extra space
+ *
+ * 5. After recursion completes, the array is rotated as required
+ *
+ * 6. Print the final rotated array
+ */
+
+import java.util.Scanner;
+
+public class BlockSwapRotation {
+
+    // Function to swap blocks of the array
+    static void swap(int[] arr, int fi, int si, int d) {
+        for (int i = 0; i < d; i++) {
+            int temp = arr[fi + i];
+            arr[fi + i] = arr[si + i];
+            arr[si + i] = temp;
+        }
+    }
+
+    // Recursive function to rotate array left by d positions
+    static void rotate(int[] arr, int d, int n) {
+        if (d == 0 || d == n) return;
+
+        if (d == n - d) {
+            swap(arr, 0, n - d, d);
+            return;
+        }
+
+        if (d < n - d) {
+            swap(arr, 0, n - d, d);
+            rotate(arr, d, n - d);
+        } else {
+            swap(arr, 0, d, n - d);
+            rotate(arr, n - d, d);
+        }
+    }
+
+    // Helper to print array
+    static void printArray(int[] arr) {
+        for (int val : arr)
+            System.out.print(val + " ");
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter size of array: ");
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+        System.out.print("Enter elements of array: ");
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+
+        System.out.print("Enter number of positions to rotate: ");
+        int d = sc.nextInt();
+        d = d % n; // Normalize rotation
+
+        rotate(arr, d, n);
+        System.out.print("Rotated array: ");
+        printArray(arr);
+
+        sc.close();
+    }
+}
+ 
+------ Euclid.java ------ 
+/* This program computes the Greatest Common Divisor (GCD) of two integers using Euclid's algorithm.
+ *
+ * Euclid's Algorithm:
+ * A classic and efficient method to find the GCD by recursively replacing the
+ * pair (a, b)
+ * with (b, a % b) until b becomes zero. The GCD is then the value of a.
+ *
+ * Sample Input:
+ * Line 1: Enter first integer (a): {a}
+ * Line 2: Enter second integer (b): {b}
+ *
+ * Sample Output:
+ * Line 1: GCD of a and b
+ *
+ * Approach:
+ * 1. Read two integers from the user.
+ * 2. Use recursion to compute gcd(a, b):
+ * - If b == 0, gcd is a.
+ * - Else, gcd is gcd(b, a % b).
+ * 3. Print the result.
+ */
+import java.util.Scanner;
+public class Euclid {
+
+    // Function to return gcd of a and b using Euclid's algorithm
+    static int gcd(int a, int b) {
+    if (b == 0)
+    return a;
+    return gcd(b, a % b);
+    }
+
+    public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.print("Enter first integer (a): ");
+    int a = scanner.nextInt();
+
+    System.out.print("Enter second integer (b): ");
+    int b = scanner.nextInt();
+
+    int result = gcd(a, b);
+
+    System.out.println("GCD of " + a + " and " + b + " is " + result);
+
+    scanner.close();
+    }
+}
+ 
+------ Karatsuba.java ------ 
+/* This program multiplies two large numbers using the Karatsuba algorithm.
+ *
+ * Karatsuba is a divide-and-conquer algorithm that reduces the number of
+ * single-digit multiplications compared to the traditional method.
+ *
+ * Sample Input:
+ * Hardcoded in main: num1 = 12345678, num2 = 87654321
+ *
+ * Sample Output:
+ * Line 1: Product: {result}
+ *
+ * {result} = product of num1 and num2 using Karatsuba multiplication
+ *
+ * Approach:
+ * 1. Get the number of digits in both input numbers
+ *    - Use the larger size to determine the splitting point
+ *
+ * 2. If the number of digits is small (less than 10), use direct multiplication
+ *    - This serves as the base case for recursion
+ *
+ * 3. Split both numbers into two halves:
+ *    - high1 and low1 for the first number
+ *    - high2 and low2 for the second number
+ *    - Use powers of 10 to split based on digit count
+ *
+ * 4. Make three recursive calls:
+ *    - z0 = multiply(low1, low2)
+ *    - z1 = multiply(low1 + high1, low2 + high2)
+ *    - z2 = multiply(high1, high2)
+ *
+ * 5. Combine the results using the Karatsuba formula:
+ *    - result = z2 × 10^(2N) + (z1 − z2 − z0) × 10^N + z0
+ *
+ * 6. Return the final result and print it in the main method
+ */
+
+public class Karatsuba {
+
+    // Function to multiply two numbers using Karatsuba algorithm
+    public long multiply(long x, long y) {
+        int size1 = getSize(x);
+        int size2 = getSize(y);
+        int N = Math.max(size1, size2);
+
+        // Base case for recursion
+        if (N < 10)
+            return x * y;
+
+        // Calculate the size of the numbers
+        N = (N / 2) + (N % 2);
+        long m = (long) Math.pow(10, N);
+
+        // Split the digit sequences in the middle
+        long high1 = x / m;
+        long low1 = x % m;
+        long high2 = y / m;
+        long low2 = y % m;
+
+        // 3 recursive calls
+        long z0 = multiply(low1, low2);
+        long z1 = multiply((low1 + high1), (low2 + high2));
+        long z2 = multiply(high1, high2);
+
+        return z2 * (long) Math.pow(10, 2 * N) + ((z1 - z2 - z0) * m) + z0;
+    }
+
+    // Helper function to get number of digits
+    public int getSize(long num) {
+        int count = 0;
+        while (num != 0) {
+            count++;
+            num /= 10;
+        }
+        return count;
+    }
+
+    // Main method to test the algorithm
+    public static void main(String[] args) {
+        Karatsuba k = new Karatsuba();
+        long num1 = 12345678;
+        long num2 = 87654321;
+        long result = k.multiply(num1, num2);
+        System.out.println("Product: " + result);
+    }
+}
+ 
+------ LeadersInArray.java ------ 
+/* This program finds all the leaders in an array.
+ *
+ * Leader criteria:
+ * A leader is an element arr[i] such that it is greater than all elements to its right
+ * i.e., arr[i] > arr[i+1], arr[i+2], ..., arr[n-1]
+ *
+ * Sample Input:
+ * Line 1: {n}
+ * Line 2: {Elements of the array}
+ *
+ * Sample Output:
+ * Line 1: {list of leaders}
+ *
+ * {n}      = number of elements in the array
+ * {leaders} = elements that satisfy the leader condition
+ *
+ * Approach:
+ * 1. Traverse the array from right to left
+ *
+ * 2. Initialize max with the rightmost element (last element of the array)
+ *    - This element is always a leader
+ *
+ * 3. For each element from index n-2 to 0:
+ *    - If the current element is greater than or equal to max,
+ *      it is a leader and becomes the new max
+ *
+ * 4. Add each leader to a result list as they are found
+ *    - Since we traverse from right to left, leaders are added in reverse order
+ *
+ * 5. Reverse the result list before returning to maintain original left-to-right order
+ *
+ * 6. Print the final list of leaders
+ */
+
+import java.util.*;
+
+public class LeadersInArray {
+    static void printArrayList(ArrayList<Integer> arr) {
+        for (int j : arr) {
+            System.out.print(j + " ");
+        }
+    }
+
+    static ArrayList<Integer> leaders(int[] arr, int n) {
+        ArrayList<Integer> res = new ArrayList<>();
+        int m = arr[n - 1];
+        res.add(m);
+
+        for (int i = n - 2; i >= 0; i--)
+            if (arr[i] >= m) {
+                res.add(arr[i]);
+                m = arr[i];
+            }
+
+        Collections.reverse(res);
+        return res;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the size of array: ");
+        int n = sc.nextInt();
+        
+        System.out.print("Enter the elements of the array: ");
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();
+
+        ArrayList<Integer> res = leaders(arr, n);
+        printArrayList(res);
+
+        sc.close();
+    }
+}
+ 
+------ MajorityElement.java ------ 
+import java.util.Scanner;
+
+public class MajorityElement {
+    public static int majorityElement(int[] arr, int n) {
+        int count = 0;
+        Integer candidate = null;
+
+        // Phase 1: Find a candidate for majority element
+        for (int num : arr) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+
+        // Phase 2: Verify the candidate
+        count = 0;
+        for (int num : arr) {
+            if (num == candidate) {
+                count++;
+            }
+        }
+
+        return (count > n / 2) ? candidate : -1; // Return -1 if no majority element
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        sc.close();
+
+        int result = majorityElement(arr, n);
+        if (result != -1) {
+            System.out.println("Majority element is: " + result);
+        } else {
+            System.out.println("No majority element found.");
+        }
+    }
+}
+ 
+------ maxConsecutives1s.java ------ 
+
+/* Finds maximum number of consecutives ones
+ * 
+ * Sample input
+ * Line1 : {n} 
+ * Line2 : {Elements of the array}
+ * Line3 : {K} 
+ * 
+ * Sample output
+ * Line1 : Max length is {maxLength}
+ * 
+ * {n} = number of elements in array
+ * {K} = no. of bits that can be flipped
+ * {maxLength} = Maximum no. of consecutive 1s
+ * 
+ * Approach
+ * 1. Take a maxlength (default as 0), start pointer as 0
+ * 2. Do a for loop over the elements in the array
+ * 3. Have a flip bit that increase whenever 0 is encountered
+ * 4. Use a while loop when flip crosses k value i.e too many zeros used as flippable bits
+ * 5. Increase start pointer, flip-- at every zero deducted until loop codition fails.
+ * 6. Return Math.max(0, end_pointer - start_pointer + 1);
+ * 
+ * Note:
+ * Takes values from start indiscriminately until k is exhuasted 
+ * It then optimises by unflipping zeros to get new max length 
+ */
+import java.util.Scanner;
+
+class maxConsecutive1s {
+    public static int max(int n, int k, int[] arr) {
+        int maxLen = 0;
+        int flip = 0;
+        int i = 0;
+
+        for (int j = 0; j < n; j++) {
+            if (arr[j] == 0)
+                flip++;
+
+            while (flip > k) {
+                if (arr[i] == 0)
+                    flip--;
+                i++;
+            }
+            maxLen = Math.max(maxLen, j - i + 1);
+        }
+        return maxLen;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+        int k = sc.nextInt();
+        sc.close();
+        int res = max(n, k, arr);
+
+        System.out.println("Max length is " + res);
+    }
+
+}
+ 
+------ MaxEquilibriumSum.java ------ 
+/*
+ * 📌 Program: Maximum Equilibrium Sum Finder
+ *
+ * 🧠 Description:
+ * This program finds the maximum value of the sum of elements on the left side of an index
+ * where the sum of elements to the left equals the sum of elements to the right.
+ * It's a variation of the "equilibrium index" problem, but instead of returning the index,
+ * it returns the maximum such sum.
+ *
+ * 🔍 How It Works:
+ * 1. Read the array size and elements.
+ * 2. Calculate the total sum of the array (initial right sum).
+ * 3. Traverse the array:
+ *    - Add current element to left sum.
+ *    - Subtract current element from right sum.
+ *    - If left and right sums are equal, update the maximum equilibrium sum.
+ * 4. Print the result.
+ *
+ * 📥 Input Format:
+ * Line 1: An integer n (number of elements in the array)
+ * Line 2: n space-separated integers (the array elements)
+ *
+ * 📤 Output Format:
+ * Line 1: "Answer is : {maxEquilibriumSum}"
+ *
+ * 🧪 Example:
+ * Input:
+ * 5
+ * 1 2 3 3 2
+ * Output:
+ * Answer is : 0
+ */
+
+import java.util.Scanner;
+
+public class MaxEquilibriumSum {
+
+    public static int findMaxEquilibriumSum(int[] arr, int n) {
+        int leftSum = 0;
+        int rightSum = 0;
+        int maxEquilibrium = 0;
+
+        for (int i = 0; i < n; i++) {
+            rightSum += arr[i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            leftSum += arr[i];       
+            if (leftSum == rightSum) {
+                maxEquilibrium = Math.max(maxEquilibrium, leftSum);
+            }
+            rightSum -= arr[i];      
+           
+        }
+
+        return maxEquilibrium;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        sc.close();
+        int result = findMaxEquilibriumSum(arr, n);
+        System.out.println("Answer is : " + result);
+    }
+}
+ 
+------ maxProductSubarray.java ------ 
+/* Finds the subarray which has the maximum product 
+ * Subarray = continous elements
+ * Sample input
+ * Line1 : {n} 
+ * Line2 : {Elements of the array} 
+ * 
+ * Sample output
+ * Line1 : Max sub-array product is {result} | FAULTY
+ * Line2 : Max sub-array product is {result}
+ * 
+ * {n} = number of elements in array 
+ * {result} = Maximum product of consecutive sub-array
+ * 
+ * Approach:
+ * 1. Initialize three variables:
+ *    - max: maximum product ending at the current index
+ *    - min: minimum product ending at the current index
+ *    - result: overall maximum product found so far
+ *
+ * 2. Iterate through the array starting from index 1
+ *
+ * 3. For each element, compute:
+ *    - temp: maximum of (current element, current element × max, current element × min)
+ *    - Update min using the minimum of (current element, current element × max, current element × min)
+ *
+ * 4. Assign temp to max (since max was used in both calculations)
+ *
+ * 5. Update result if the current max is greater than the previous result
+ *
+ * 6. After the loop ends, return result as the maximum product of any contiguous subarray.
+ * 
+ * Note:
+ * The first line in output is used to showcase a common mistake made during this code.
+ */
+import java.util.*;
+
+public class maxProductSubarray {
+    public static int maxSub(int[] arr, int n) {
+        if (n == 0)
+            return 0;
+        int min = arr[0];
+        int max = arr[0];
+        int result = max;
+
+        for (int i = 1; i < n; i++) {
+
+            int temp = Math.max(arr[i], Math.max(arr[i] * max, arr[i] * min));
+            min = Math.min(arr[i], Math.min(arr[i] * max, arr[i] * min));
+            max = temp;
+            result = Math.max(result, max);
+        }
+
+        return result;
+    }
+
+    public static int faultymaxSub(int[] arr, int n) {
+        if (n == 0)
+            return 0;
+        int min = arr[0];
+        int max = arr[0];
+        int result = max;
+
+        for (int i = 1; i < n; i++) {
+
+            max = Math.max(arr[i], Math.max(arr[i] * max, arr[i] * min));
+            min = Math.min(arr[i], Math.min(arr[i] * max, arr[i] * min));
+
+            result = Math.max(result, max);
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+        sc.close();
+        System.out.println("Max sub-array product is " + faultymaxSub(arr, n) + " | FAULTY ");
+        System.out.println("Max sub-array product is " + maxSub(arr, n));
+    }
+}
+ 
+------ MaxSumOfHourglass.java ------ 
+/* Calculates the maximum sum of an hourglass pattern in a 2D matrix
+ * Hourglass = r1 three elements, r2 one element, r3 three elements  => total 7 elements
+ * 
+ * Sample input 
+ * Line1 : Number of rows in the matrix {rows}
+ * Line2 : Number of columns in the matrix {columns}
+ * Line3 : Matrix elements entered row-wise
+ * 
+ * Sample output
+ * Line1 : The maximum hourglass sum is: {result} 
+ * 
+ * Approach:
+ * 1. Check if the matrix has at least 3 rows and 3 columns to form an hourglass.
+ * 2. Traverse the matrix using nested loops, stopping 2 rows and 2 columns before the end.
+ * 3. For each valid top-left position of an hourglass, calculate the sum of its 7 elements:
+ *    - Top row: 3 consecutive elements
+ *    - Middle row: 1 centered element
+ *    - Bottom row: 3 consecutive elements
+ * 4. Track the maximum sum encountered during traversal.
+ * 5. Return the highest hourglass sum found.
+ * 
+ * Note:
+ * The first line in output highlights a common mistake often made while implementing this logic.
+ */
+
+import java.util.*;
+
+public class MaxSumOfHourglass {
+    public static int maxSum(int[][] arr, int rows, int columns) {
+        if (rows < 3 || columns < 3)
+            return -1;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < rows - 2; i++) {
+            for (int j = 0; j < columns - 2; j++) {
+                int sum = arr[i][j] + arr[i][j + 1] + arr[i][j + 2]
+                        + arr[i + 1][j + 1]
+                        + arr[i + 2][j] + arr[i + 2][j + 1] + arr[i + 2][j + 2];
+                max = Math.max(sum, max);
+            }
+        }
+        return max;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int rows = sc.nextInt();
+        int columns = sc.nextInt();
+        int[][] matrix = new int[rows][columns];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < columns; j++)
+                matrix[i][j] = sc.nextInt();
+        sc.close();
+        int result = maxSum(matrix, rows, columns);
+        System.out.println("The maximum hourglass sum is: " + result);
+
+    }
+}
+ 
+------ moveHyphenToTheBeginning.java ------ 
+/* This program moves all hyphens ('-') in a string to the beginning,
+ * while preserving the relative order of all other characters.
+ *
+ * Sample Input:
+ * Line 1: {input}
+ *
+ * Sample Output:
+ * Line 1: {rearranged_string}
+ *
+ * {input}             = original string containing hyphens and other characters
+ * {rearranged_string} = string with all hyphens moved to the front
+ *
+ * Approach:
+ * 1. Convert the input string into a character array for in-place manipulation
+ *
+ * 2. Initialize two pointers:
+ *    - i: tracks the position from the end where the next non-hyphen should be placed
+ *    - j: iterates from the end of the array to the beginning
+ *
+ * 3. Use a for loop to traverse the array in reverse:
+ *    - If the current character is not a hyphen, swap it with the character at index i
+ *    - Decrement i to move the placement boundary leftward
+ *
+ * 4. The swap ensures that non-hyphen characters are pushed to the end,
+ *    effectively shifting hyphens toward the front
+ *
+ * 5. Return the modified character array and print the result
+ */
+
+import java.util.Scanner;
+
+public class moveHyphenToTheBeginning {
+
+    static void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    static char[] move(String input) {
+        char[] arr = input.toCharArray();
+        int i = arr.length - 1;
+
+        for (int j = i; j >= 0; j--) {
+            if (arr[j] != '-') {
+                swap(arr, i, j);
+                i--;
+            }
+        }
+        return arr;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+        char[] output = move(input);
+        System.out.println(String.valueOf(output));
+        sc.close();
+    }
+}
+ 
+------ QuickSort.java ------ 
+/* This program implements the Quick Sort algorithm.
+ * Quick Sort is an efficient, comparison-based, divide-and-conquer sorting algorithm.
+ *
+ * Approach:
+ * 1. Choose a 'pivot' element from the array.
+ * 2. Partition the array into two subarrays:
+ *    - The first subarray contains elements smaller than the pivot.
+ *    - The second subarray contains elements greater than the pivot.
+ * 3. Recursively apply the same process to the two subarrays.
+ *    - This continues until the base case is reached (subarrays of size 1 or empty).
+ *
+ * Quick Sort Characteristics:
+ * - Time Complexity:
+ *   - Best and Average Case: O(n log n), when the pivot splits the array into roughly equal halves.
+ *   - Worst Case: O(n^2), when the pivot consistently divides the array into the worst possible splits (e.g., when the array is already sorted).
+ * - Space Complexity: O(log n) due to the recursive stack space.
+ * - Stable: Not stable, as equal elements might change their relative order after sorting.
+ *
+ * Sample Input:
+ * Line 1: {n}            -> The number of elements in the array.
+ * Line 2: {arr[0], arr[1], ..., arr[n-1]} -> The array of integers to be sorted.
+ *
+ * Sample Output:
+ * Line 1: "Original array: {arr}" -> The original unsorted array.
+ * Line 2: "Sorted array: {arr}"   -> The array after sorting using Quick Sort.
+ *
+ * {arr}    = array of integers (length n) to be sorted.
+ *
+ * Detailed Steps in the Code:
+ * 1. The user is prompted to enter the number of elements for the array.
+ * 2. The user is then asked to input the array elements.
+ * 3. The `quickSort()` method is called to sort the array.
+ *    - This method recursively divides the array into smaller subarrays based on the pivot.
+ * 4. The `partition()` method is used to partition the array around the pivot:
+ *    - It moves elements smaller than the pivot to the left and greater to the right.
+ *    - It returns the index of the pivot after partitioning.
+ * 5. The sorted array is printed after the sorting process.
+ *
+ * Utility Methods:
+ * - `quickSort(int[] arr, int low, int high)`: Main method that recursively sorts the array using Quick Sort.
+ * - `partition(int[] arr, int low, int high)`: Helper method to partition the array around the pivot.
+ * - `swap(int[] arr, int i, int j)`: Helper method to swap two elements in the array.
+ * - `printArray(int[] arr)`: Helper method to print the elements of the array.
+ *
+ * The program uses recursion and the partitioning method to sort the array efficiently.
+ * It makes use of basic I/O for input and output, and utilizes loops and conditionals to implement the sorting logic.
+ */
+import java.util.Scanner;
+
+public class QuickSort {
+    // Method to perform quick sort on an array
+    static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = (low - 1);
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i + 1, high);
+
+        return i + 1;
+    }
+
+    // Utility method to swap two elements in an array
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // Utility method to print the array
+    public static void printArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of elements: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        System.out.print("Enter the elements: ");
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+
+        sc.close();
+        System.out.print("Original array: ");
+        printArray(arr);
+
+        quickSort(arr, 0, n - 1);
+
+        System.out.print("Sorted array: ");
+        printArray(arr);
+    }
+}
+ 
+------ SelectionSort.java ------ 
+/* This program implements the Selection Sort algorithm.
+ * Selection Sort is an in-place comparison-based sorting algorithm.
+ *
+ * Approach:
+ * 1. Start from the first element of the array.
+ * 2. Find the smallest element in the unsorted part of the array.
+ *    - This is done by iterating through the remaining elements and comparing each element.
+ * 3. Once the smallest element is found, swap it with the first unsorted element.
+ * 4. Repeat steps 2 and 3 for each subsequent unsorted section of the array.
+ *    - After each iteration, the boundary of the unsorted section shrinks.
+ *
+ * Selection Sort Characteristics:
+ * - Time Complexity: O(n^2) in all cases (best, worst, average).
+ * - Space Complexity: O(1) because it sorts in-place.
+ * - Not stable: Equal elements may not retain their original order.
+ *
+ * Sample Input:
+ * Line 1: {n}            -> The number of elements in the array.
+ * Line 2: {arr[0], arr[1], ..., arr[n-1]} -> The array of integers to be sorted.
+ *
+ * Sample Output:
+ * Line 1: "Original array: {arr}" -> The original unsorted array.
+ * Line 2: "Sorted array: {arr}"   -> The array after sorting using Selection Sort.
+ *
+ * {arr}    = array of integers (length n) to be sorted.
+ *
+ * Detailed Steps in the Code:
+ * 1. The user is prompted to enter the number of elements for the array.
+ * 2. The user is then asked to input the array elements.
+ * 3. The `selectionSort()` method is called to sort the array.
+ * 4. Within `selectionSort()`, a loop iterates through the array to find the smallest element
+ *    in the unsorted portion and swaps it with the first unsorted element.
+ * 5. The sorted array is printed after the sorting process.
+ *
+ * Utility Methods:
+ * - `selectionSort(int[] arr)`: Main method that sorts the array using the Selection Sort algorithm.
+ * - `swap(int[] arr, int i, int j)`: Helper method to swap two elements in the array.
+ * - `printArray(int[] arr)`: Helper method to print the elements of the array.
+ *
+ * The program makes use of basic I/O for input and output, and uses loops and conditional statements
+ * to implement the sorting logic.
+ */
+import java.util.Scanner;
+
+public class SelectionSort {
+    // Method to perform selection sort on an array
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            // Find the index of the min element in the unsorted part
+            int min = i;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[min]) {
+                    min = j;
+                }
+            }
+            // Swap the found min element with the first element of the unsorted part
+            swap(arr, i, min);
+        }
+    }
+
+    // Utility method to swap two elements in an array
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // Utility method to print the array
+    public static void printArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of elements: ");
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        System.out.print("Enter the elements: ");
+        for (int i = 0; i < n; i++)
+            arr[i] = sc.nextInt();
+        sc.close();
+        System.out.print("Original array: ");
+        printArray(arr);
+
+        selectionSort(arr);
+
+        System.out.print("Sorted array: ");
+        printArray(arr);
+    }
+} 
+------ swapNibbles.java ------ 
+/* This program swaps the nibbles of an 8-bit number.
+ * Nibble = 4 bits
+ * An 8-bit number consists of two nibbles:
+ *    - Left nibble: higher 4 bits (bits 4–7)
+ *    - Right nibble: lower 4 bits (bits 0–3)
+ *
+ * Sample Input:
+ * Line 1: {n}
+ *
+ * Sample Output:
+ * Line 1: {n} -> {result}
+ *
+ * {n}      = input number (assumed to be within 0–255)
+ * {result} = number after swapping its left and right nibbles
+ *
+ * Approach:
+ * 1. Extract the right nibble using bitwise AND with 0x0F
+ *    - This isolates the lower 4 bits
+ *
+ * 2. Extract the left nibble using bitwise AND with 0xF0
+ *    - This isolates the upper 4 bits
+ *
+ * 3. Shift the right nibble to the left by 4 bits
+ *    - This moves it into the upper nibble position
+ *
+ * 4. Shift the left nibble to the right by 4 bits
+ *    - This moves it into the lower nibble position
+ *
+ * 5. Combine the shifted nibbles using bitwise OR
+ *    - This produces the final swapped result
+ *
+ * 6. Return the result and print it in the format: {original} -> {swapped}
+ */
+
+import java.util.Scanner;
+
+class swapNibbles {
+
+    static int swap(int n) {
+        int l = (n & 0x0F) << 4;
+        int r = (n & 0xF0) >> 4;
+
+        return l | r;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        System.out.println(n + " -> " + swap(n));
+        sc.close();
+    }
+}
+ 
+------ WeightedSubstring.java ------ 
+/* This program counts the number of substrings in a given string
+ * where the sum of character weights is strictly less than a threshold value `k`.
+ *
+ * Sample Input:
+ * Line 1: cdabhg
+ * Line 2: 761283425612
+ * Line 3: {k}
+ *
+ * Sample Output:
+ * Line 1: Count of valid substrings: 10
+ *
+ * cdabhg = input string whose substrings are evaluated
+ * 761283425612 = weights assigned to characters from 'a' to 'z' (left to right) 
+ * {k} = threshold (The maximum alphabet-weight sum that a subtring can have)
+ * 
+ * Approach:
+ * 1. Build a weight map:
+ *    - Assign weights to characters 'a' to 'z' using the input weight string.
+ *    - Each character gets a weight based on its position in the alphabet.
+ *
+ * 2. Iterate through all possible substrings of the input string:
+ *    - For each starting index `i`, initialize a running sum.
+ *    - Extend the substring by adding one character at a time (`j` from `i` to end).
+ *    - Add the weight of the current character to the running sum.
+ *    - If the sum is less than `k`, count the substring as valid.
+ *    - If the sum reaches or exceeds `k`, break out of the inner loop.
+ *
+ * 3. Return the total count of valid substrings.
+ */
+
+import java.util.*;
+
+public class WeightedSubstring {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String text = sc.nextLine();
+        String weights = sc.nextLine();
+        sc.close();
+        int k = 7;
+
+        Map<Character, Integer> weightMap = buildWeightMap(weights);
+
+        int result = countValidSubstrings(text, weightMap, k);
+        System.out.println("Count of valid substrings: " + result);
+    }
+
+    private static Map<Character, Integer> buildWeightMap(String weights) {
+        Map<Character, Integer> weightMap = new HashMap<>();
+        char ch = 'a';
+        for (int i = 0; i < weights.length() && ch <= 'z'; i++, ch++) {
+            weightMap.put(ch, weights.charAt(i) - '0');
+        }
+        return weightMap;
+    }
+
+    private static int countValidSubstrings(String text, Map<Character, Integer> weightMap, int k) {
+        int n = text.length();
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                char currentChar = text.charAt(j);
+                sum += weightMap.getOrDefault(currentChar, 0);
+                if (sum < k) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+}
+ 
